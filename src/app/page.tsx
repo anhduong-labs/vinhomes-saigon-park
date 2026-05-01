@@ -223,7 +223,7 @@ export default function Page() {
         {/* gradient tối hơn để text nổi */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/60 to-primary-bg" />
 
-        <div className="relative mx-auto flex min-h-[92vh] max-w-6xl flex-col justify-center px-4 py-16">
+        <div className="relative mx-auto flex min-h-[92vh] max-w-6xl flex-col justify-end px-4 pb-10 pt-24">
           {/* H1 — 2 dòng, dòng 2 dùng Silk Sand + underline accent thay màu đỏ */}
           <h1 className="max-w-4xl text-4xl font-black uppercase leading-[1.15] tracking-tight md:text-6xl lg:text-7xl">
             VINHOMES HÓC MÔN
