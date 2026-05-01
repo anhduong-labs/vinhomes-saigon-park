@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary-bg: #072926;
+  --color-primary-accent: #640209;
+  --color-primary-accent-hover: #900D1B;
+  --color-surface-light: #FBF7F4;
+  --color-surface-warm: #F5D4BD;
+  --color-support-teal: #02564C;
+}
+
+body {
+  background-color: var(--color-primary-bg);
+  color: var(--color-surface-light);
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
