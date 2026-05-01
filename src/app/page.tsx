@@ -2,13 +2,16 @@
 
 import Image from "next/image";
 import { useMemo, useState } from "react";
-import { CheckCircle2, ChevronRight, Download, Landmark, ShieldCheck, Sparkles, X } from "lucide-react";
+import { CheckCircle2, ChevronRight, Download, Landmark, MessageCircle, Phone, ShieldCheck, Sparkles, X } from "lucide-react";
 
 type FormState = {
   fullName: string;
   phone: string;
   demand: string;
 };
+
+const CONTACT_PHONE = "0975442140";
+const ZALO_LINK = "https://zalo.me/0975442140";
 
 const overview = [
   { label: "Tên dự án", value: "Vinhomes Saigon Park (thị trường thường gọi Vinhomes Hóc Môn)" },
@@ -135,7 +138,7 @@ export default function Home() {
         </div>
       </header>
 
-      <section className="relative overflow-hidden border-b border-support-teal/30">
+      <section className="relative overflow-hidden border-b border-surface-light/15">
         <Image
           src="https://vinhomeshocmonsr.vn/wp-content/uploads/2025/11/phoi-canh-vinhomes-hoc-mon.jpg"
           alt="Phối cảnh Vinhomes Saigon Park"
@@ -143,24 +146,33 @@ export default function Home() {
           priority
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-primary-bg/75 to-primary-bg" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-primary-bg/80 to-primary-bg" />
 
-        <div className="relative mx-auto flex max-w-6xl flex-col gap-5 px-4 py-14 md:py-24">
-          <div className="inline-flex w-fit items-center gap-2 rounded-full border border-primary-accent/50 bg-primary-accent/20 px-3 py-1 text-xs font-semibold text-surface-warm">
+        <div className="relative mx-auto max-w-6xl px-4 py-14 md:py-24">
+          <div className="inline-flex w-fit items-center gap-2 rounded-full border border-primary-accent/60 bg-primary-accent/20 px-3 py-1 text-xs font-semibold text-surface-light">
             <Sparkles size={14} /> Vinhomes Hóc Môn – Khu đô thị Đại học Quốc tế
           </div>
 
-          <h1 className="max-w-4xl text-3xl font-extrabold leading-tight md:text-5xl">
-            Cập nhật giá và chính sách giai đoạn 1 Vinhomes Saigon Park
+          <h1 className="mt-4 text-4xl font-black uppercase leading-tight md:text-6xl">
+            VINHOMES HÓC MÔN
           </h1>
+          <p className="mt-2 max-w-3xl text-base font-semibold text-surface-light/95 md:text-xl">
+            Cập nhật giá và chính sách giai đoạn 1 Vinhomes Saigon Park
+          </p>
 
-          <div className="max-w-3xl space-y-2 text-sm text-surface-light/90 md:text-base">
-            <p>• Giá giai đoạn 1 đang ở vùng tham chiếu tốt để đầu tư trung & dài hạn.</p>
-            <p>• Rổ hàng đa dạng từ đại lý F1 độc quyền.</p>
-            <p>• Ưu tiên cập nhật sản phẩm đẹp theo từng đợt mở bán.</p>
+          <div className="mt-7 grid gap-3 md:grid-cols-3">
+            {[
+              "Giá giai đoạn 1 ở vùng tham chiếu tốt để theo dõi điểm vào.",
+              "Rổ hàng đa dạng từ đại lý F1 độc quyền.",
+              "Ưu tiên cập nhật sản phẩm đẹp theo từng đợt mở bán.",
+            ].map((item) => (
+              <article key={item} className="rounded-xl border border-surface-light/20 bg-surface-light/10 p-4 backdrop-blur-sm">
+                <p className="text-sm leading-relaxed text-surface-light">{item}</p>
+              </article>
+            ))}
           </div>
 
-          <div className="flex flex-col gap-3 sm:flex-row">
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
             <button
               onClick={() => setIsFormOpen(true)}
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary-accent px-6 py-4 text-base font-bold shadow-lg shadow-primary-accent/30 transition hover:-translate-y-0.5 hover:bg-primary-accent-hover"
@@ -169,21 +181,21 @@ export default function Home() {
             </button>
             <button
               onClick={() => setIsFormOpen(true)}
-              className="inline-flex items-center justify-center gap-2 rounded-lg border border-surface-warm/40 bg-support-teal/35 px-6 py-4 text-base font-semibold transition hover:bg-support-teal/60"
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-surface-light/40 bg-surface-light/10 px-6 py-4 text-base font-semibold text-surface-light transition hover:bg-surface-light/20"
             >
               Đăng ký theo dõi rổ hàng
             </button>
           </div>
 
-          <div className="mt-2 grid max-w-3xl grid-cols-1 gap-2 text-xs text-surface-light/80 sm:grid-cols-3">
+          <div className="mt-4 grid max-w-3xl grid-cols-1 gap-2 text-xs text-surface-light/85 sm:grid-cols-3">
             <div className="inline-flex items-center gap-1.5">
-              <ShieldCheck size={14} className="text-surface-warm" /> Bảo mật thông tin đăng ký
+              <ShieldCheck size={14} className="text-surface-light" /> Bảo mật thông tin đăng ký
             </div>
             <div className="inline-flex items-center gap-1.5">
-              <CheckCircle2 size={14} className="text-surface-warm" /> Cập nhật liên tục theo thị trường
+              <CheckCircle2 size={14} className="text-surface-light" /> Cập nhật liên tục theo thị trường
             </div>
             <div className="inline-flex items-center gap-1.5">
-              <Landmark size={14} className="text-surface-warm" /> Bám dữ liệu từ nguồn tham chiếu
+              <Landmark size={14} className="text-surface-light" /> Bám dữ liệu từ nguồn tham chiếu
             </div>
           </div>
         </div>
@@ -342,13 +354,32 @@ export default function Home() {
         </div>
       </footer>
 
-      <div className="fixed bottom-0 left-0 z-50 flex w-full gap-3 border-t border-surface-warm/20 bg-primary-bg p-3 md:hidden">
-        <button onClick={() => setIsFormOpen(true)} className="flex-1 rounded-lg bg-support-teal px-3 py-3 text-center text-sm font-bold">
+      <div className="fixed bottom-0 left-0 z-50 flex w-full gap-3 border-t border-surface-light/20 bg-primary-bg p-3 md:hidden">
+        <button onClick={() => setIsFormOpen(true)} className="flex-1 rounded-lg bg-surface-light/15 px-3 py-3 text-center text-sm font-bold text-surface-light">
           Theo dõi rổ hàng
         </button>
-        <button onClick={() => setIsFormOpen(true)} className="flex-1 rounded-lg bg-primary-accent px-3 py-3 text-sm font-bold">
+        <button onClick={() => setIsFormOpen(true)} className="flex-1 rounded-lg bg-primary-accent px-3 py-3 text-sm font-bold text-surface-light">
           Nhận cập nhật GĐ1
         </button>
+      </div>
+
+      <div className="fixed right-4 top-1/2 z-50 hidden -translate-y-1/2 flex-col gap-3 md:flex">
+        <a
+          href={ZALO_LINK}
+          target="_blank"
+          rel="noreferrer"
+          className="flex h-12 w-12 items-center justify-center rounded-full border border-surface-light/35 bg-surface-light/15 text-surface-light backdrop-blur hover:bg-surface-light/25"
+          aria-label="Liên hệ Zalo"
+        >
+          <MessageCircle size={20} />
+        </a>
+        <a
+          href={`tel:${CONTACT_PHONE}`}
+          className="flex h-12 w-12 items-center justify-center rounded-full bg-primary-accent text-surface-light hover:bg-primary-accent-hover"
+          aria-label="Gọi ngay"
+        >
+          <Phone size={20} />
+        </a>
       </div>
 
       {isFormOpen && (
