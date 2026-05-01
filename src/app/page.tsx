@@ -239,7 +239,7 @@ export default function Page() {
           </p>
 
           {/* 3 card blocks */}
-          <div className="mt-8 grid gap-3 sm:grid-cols-3">
+          <div className="mt-8 grid grid-cols-3 gap-3">
             {[
               { emoji: "🏷️", title: "Giá giai đoạn 1 vào điểm tốt nhất", sub: "Mức tham chiếu thấp nhất trong chu kỳ phát triển đại đô thị" },
               { emoji: "🎯", title: "Rổ hàng độc quyền từ đại lý F1", sub: "Ưu tiên sản phẩm đẹp theo từng đợt mở bán chính thức" },
