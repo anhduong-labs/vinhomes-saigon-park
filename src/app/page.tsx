@@ -1,464 +1,501 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useState } from "react";
-import { CheckCircle2, ChevronRight, Download, Landmark, MessageCircle, Phone, ShieldCheck, Sparkles, X } from "lucide-react";
+import { useState, useEffect } from "react";
+import {
+  X, ShieldCheck, Phone, MessageCircle,
+  MapPin, Train, Building2, TrendingUp,
+  Home, Store, Hotel, Castle, Building,
+  CheckCircle2, ChevronLeft, ChevronRight,
+} from "lucide-react";
 
-type FormState = {
-  fullName: string;
-  phone: string;
-  demand: string;
-};
+// ─── Constants ───────────────────────────────────────────────
+const PHONE = "0975442140";
+const PHONE_DISPLAY = "0975.442.140";
+const ZALO = "https://zalo.me/0975442140";
 
-const CONTACT_PHONE = "0975442140";
-const ZALO_LINK = "https://zalo.me/0975442140";
-
-const overview = [
-  { label: "Tên dự án", value: "Vinhomes Saigon Park (thị trường thường gọi Vinhomes Hóc Môn)" },
-  { label: "Vị trí", value: "Xã Xuân Thới Sơn, khu vực Hóc Môn, TP.HCM" },
-  { label: "Quy mô", value: "Khoảng 924ha" },
-  { label: "Mật độ xây dựng", value: "Khoảng 25%" },
-  { label: "Loại hình", value: "Căn hộ, nhà phố, shophouse, biệt thự song lập & đơn lập" },
-  { label: "Tiến độ thị trường", value: "Đang trong giai đoạn cập nhật thông tin mở bán" },
-  { label: "Sở hữu", value: "Tham khảo: lâu dài với khách Việt, theo quy định hiện hành với khách nước ngoài" },
-  { label: "Tệp khách hàng", value: "An cư dài hạn + đầu tư trung và dài hạn" },
+const SLIDESHOW_IMAGES = [
+  { src: "https://vinhomeshocmonsr.vn/wp-content/uploads/2025/11/phoi-canh-vinhomes-hoc-mon.jpg", alt: "Phối cảnh tổng thể" },
+  { src: "https://vinhomeshocmonsr.vn/wp-content/uploads/2025/11/vi-tri-vinhomes-hoc-mon.jpg", alt: "Vị trí dự án" },
+  { src: "https://vinhomeshocmonsr.vn/wp-content/uploads/2025/11/cong-vien-vinhomes-hoc-mon-768x432.jpg", alt: "Công viên nội khu" },
+  { src: "https://vinhomeshocmonsr.vn/wp-content/uploads/2025/11/vincom-mega-mall-vinhomes-hoc-mon-768x432.jpg", alt: "Vincom Mega Mall" },
 ];
 
-
-const pricingRows = [
-  ["Căn hộ Studio", "30–33 m²", "Từ ~1.6 tỷ"],
-  ["Căn hộ 1PN", "45–55 m²", "Từ ~2.3 tỷ"],
-  ["Căn hộ 2PN", "65–80 m²", "Từ ~3.5–5.0 tỷ"],
-  ["Căn hộ 3PN", "90–120 m²", "Từ ~4.5–7.0 tỷ"],
-  ["Nhà phố liền kề", "60–100 m² đất", "Từ ~7–12 tỷ"],
-  ["Shophouse thương mại", "100–150 m² đất", "Từ ~12–16 tỷ"],
-  ["Biệt thự song lập", "120–200 m² đất", "Từ ~16–25 tỷ"],
-  ["Biệt thự đơn lập", "200–400 m² đất", "Từ ~20–50 tỷ"],
+const OVERVIEW = [
+  { label: "Tên dự án", value: "Vinhomes Saigon Park (Vinhomes Hóc Môn)" },
+  { label: "Vị trí", value: "Xã Xuân Thới Sơn, Hóc Môn, TP.HCM" },
+  { label: "Chủ đầu tư", value: "Vinhomes – Tư vấn: Công ty CP Vinhomes" },
+  { label: "Quy mô", value: "924 ha" },
+  { label: "Mật độ xây dựng", value: "25%" },
+  { label: "Loại hình", value: "Căn hộ, Nhà phố, Shophouse, Biệt thự" },
+  { label: "Khởi công", value: "24/04/2026" },
+  { label: "Sở hữu", value: "Lâu dài (Việt Nam) – Theo quy định (Nước ngoài)" },
 ];
 
-const investmentReasons = [
+const INVESTMENT = [
   {
-    title: "Cửa ngõ Tây Bắc + trục Quốc lộ 22",
-    desc: "Vị trí bám trục giao thông liên vùng giúp gia tăng nhu cầu ở thực, khai thác kinh doanh và cho thuê trong dài hạn.",
+    icon: MapPin,
+    title: "Cửa ngõ Tây Bắc TP.HCM",
+    desc: "Tọa độ chiến lược bám trục QL22 – kết nối Tân Bình, Quận 12, Tân Phú và các tỉnh phía Tây trong 20–30 phút.",
   },
   {
-    title: "Hưởng lợi hạ tầng lớn theo chu kỳ 3–5 năm",
-    desc: "Metro số 2, vành đai, cao tốc TP.HCM – Mộc Bài là nhóm yếu tố có thể kéo mặt bằng giá khu Tây Bắc đi lên khi hoàn thiện.",
+    icon: Train,
+    title: "Đón đầu hạ tầng lớn",
+    desc: "Metro số 2, Vành đai 3, cao tốc TP.HCM – Mộc Bài đang triển khai – mặt bằng giá khu Tây Bắc sẽ được tái định giá khi hoàn thiện.",
   },
   {
-    title: "Quỹ đất 924ha hiếm trong TP.HCM",
-    desc: "Quy mô lớn cho phép hình thành hệ tiện ích khép kín, không chỉ bán nhà đơn lẻ mà bán cả chất lượng sống và hệ sinh thái đô thị.",
+    icon: Building2,
+    title: "Quỹ đất 924ha hiếm có",
+    desc: "Quy mô đủ lớn để hình thành hệ sinh thái đô thị khép kín: Vinschool, Vinmec, Vincom Mega Mall, công viên, hồ cảnh quan.",
   },
   {
-    title: "Mô hình đại đô thị Vinhomes đã có tiền lệ",
-    desc: "Các đại đô thị Vinhomes trước đó cho thấy lợi thế khi mua sớm ở giai đoạn đầu chu kỳ, đặc biệt với nhà đầu tư giữ trung hạn.",
+    icon: TrendingUp,
+    title: "Tiền lệ từ các đại đô thị Vinhomes",
+    desc: "Grand Park tăng 2× sau 5 năm, Ocean Park tăng 2–3×. GĐ1 thường là điểm vào có biên độ tốt nhất trong chu kỳ phát triển.",
   },
 ];
 
-const livingReasons = [
-  "Hệ sinh thái all-in-one: trường học, y tế, mua sắm, công viên và tiện ích nội khu.",
-  "Mật độ xây dựng thấp, ưu tiên mảng xanh và không gian sinh hoạt cho gia đình.",
-  "Kết nối đi làm phù hợp với khu vực Tân Bình, Quận 12, Tân Phú, trung tâm theo trục chính.",
-];
-
-const productCards = [
+const PRODUCTS = [
   {
-    title: "Nhà phố",
-    desc: "Phù hợp vừa ở vừa khai thác cho thuê, cân bằng giữa thanh khoản và tiềm năng tăng giá.",
-  },
-  {
-    title: "Shophouse",
-    desc: "Ưu tiên trục thương mại nội khu, phù hợp nhóm khách hàng tập trung dòng tiền kinh doanh.",
-  },
-  {
-    title: "Biệt thự song lập",
-    desc: "Nâng cấp không gian sống cho gia đình có tài chính tốt, tối ưu hơn đơn lập về ngân sách vào ban đầu.",
-  },
-  {
-    title: "Biệt thự đơn lập",
-    desc: "Sản phẩm giới hạn, định vị đẳng cấp và thường được nhóm khách giữ tài sản dài hạn ưu tiên.",
-  },
-  {
+    icon: Building,
     title: "Căn hộ",
-    desc: "Vốn vào thấp hơn thấp tầng, phù hợp chiến lược cho thuê, tích lũy tài sản và ở thật.",
+    price: "Từ ~1.6 tỷ",
+    desc: "Vốn vào thấp, phù hợp tích lũy tài sản và cho thuê dài hạn.",
+  },
+  {
+    icon: Home,
+    title: "Nhà phố",
+    price: "Từ ~7 tỷ",
+    desc: "Cân bằng giữa an cư và khai thác kinh doanh – thanh khoản tốt.",
+  },
+  {
+    icon: Store,
+    title: "Shophouse",
+    price: "Từ ~12 tỷ",
+    desc: "Mặt tiền trục thương mại nội khu – dòng tiền ổn định từ cho thuê.",
+  },
+  {
+    icon: Hotel,
+    title: "Biệt thự song lập",
+    price: "Từ ~16 tỷ",
+    desc: "Không gian riêng tư, sân vườn đẹp – tối ưu tài chính hơn đơn lập.",
+  },
+  {
+    icon: Castle,
+    title: "Biệt thự đơn lập",
+    price: "Từ ~20 tỷ",
+    desc: "Sản phẩm giới hạn, giữ giá bền vững, phù hợp tích lũy dài hạn.",
   },
 ];
 
+// ─── Slideshow Component ──────────────────────────────────────
+function Slideshow() {
+  const [idx, setIdx] = useState(0);
 
-export default function Home() {
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [formState, setFormState] = useState<FormState>({
-    fullName: "",
-    phone: "",
-    demand: "Mua đầu tư dài hạn",
-  });
+  useEffect(() => {
+    const t = setInterval(() => setIdx((i) => (i + 1) % SLIDESHOW_IMAGES.length), 4000);
+    return () => clearInterval(t);
+  }, []);
 
-  const today = useMemo(() => new Date().toLocaleDateString("vi-VN"), []);
+  const prev = () => setIdx((i) => (i - 1 + SLIDESHOW_IMAGES.length) % SLIDESHOW_IMAGES.length);
+  const next = () => setIdx((i) => (i + 1) % SLIDESHOW_IMAGES.length);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  return (
+    <div className="relative h-72 w-full overflow-hidden rounded-2xl md:h-full md:min-h-[420px]">
+      {SLIDESHOW_IMAGES.map((img, i) => (
+        <div
+          key={img.src}
+          className={`absolute inset-0 transition-opacity duration-700 ${i === idx ? "opacity-100" : "opacity-0"}`}
+        >
+          <Image src={img.src} alt={img.alt} fill className="object-cover" />
+        </div>
+      ))}
+      <button onClick={prev} className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-black/40 p-1.5 text-white hover:bg-black/60">
+        <ChevronLeft size={18} />
+      </button>
+      <button onClick={next} className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-black/40 p-1.5 text-white hover:bg-black/60">
+        <ChevronRight size={18} />
+      </button>
+      <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-1.5">
+        {SLIDESHOW_IMAGES.map((_, i) => (
+          <button key={i} onClick={() => setIdx(i)}
+            className={`h-1.5 rounded-full transition-all ${i === idx ? "w-5 bg-white" : "w-1.5 bg-white/50"}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── Lead Form ───────────────────────────────────────────────
+function LeadForm({ onSuccess }: { onSuccess: () => void }) {
+  const [form, setForm] = useState({ name: "", phone: "", demand: "Mua đầu tư dài hạn" });
+  const [loading, setLoading] = useState(false);
+
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
-
-    // TODO: gắn Google Sheet webhook khi anh Dương cung cấp
-    await new Promise((resolve) => setTimeout(resolve, 900));
-
-    setIsSubmitting(false);
-    setIsSuccess(true);
-
-    setTimeout(() => {
-      setIsSuccess(false);
-      setIsFormOpen(false);
-      setFormState({ fullName: "", phone: "", demand: "Mua đầu tư dài hạn" });
-    }, 2200);
+    setLoading(true);
+    await new Promise((r) => setTimeout(r, 900));
+    // TODO: push to Google Sheet webhook
+    setLoading(false);
+    onSuccess();
   };
 
   return (
-    <main className="min-h-screen bg-primary-bg text-surface-light pb-20 md:pb-0">
-      <header className="sticky top-0 z-40 border-b border-support-teal/30 bg-primary-bg/90 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-          <div className="flex items-center gap-3">
-            <Image
-              src="https://vinhomeshocmonsr.vn/wp-content/uploads/2023/09/logo-vinhomes-hoc-mon.png"
-              alt="Vinhomes Hóc Môn"
-              width={120}
-              height={38}
-              className="h-8 w-auto"
-            />
-            <span className="hidden text-xs text-surface-warm md:block">Cập nhật: {today}</span>
-          </div>
+    <form onSubmit={submit} className="space-y-4">
+      <div>
+        <label className="mb-1 block text-sm font-medium text-primary-bg">Họ và tên *</label>
+        <input required value={form.name}
+          onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+          placeholder="Nguyễn Văn A"
+          className="w-full rounded-lg border border-gray-200 px-4 py-3 text-primary-bg outline-none focus:border-primary-accent focus:ring-1 focus:ring-primary-accent/30"
+        />
+      </div>
+      <div>
+        <label className="mb-1 block text-sm font-medium text-primary-bg">Số điện thoại *</label>
+        <input required value={form.phone}
+          onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
+          placeholder="09xxxxxxxx" type="tel"
+          className="w-full rounded-lg border border-gray-200 px-4 py-3 text-primary-bg outline-none focus:border-primary-accent focus:ring-1 focus:ring-primary-accent/30"
+        />
+      </div>
+      <div>
+        <label className="mb-1 block text-sm font-medium text-primary-bg">Nhu cầu</label>
+        <select value={form.demand}
+          onChange={(e) => setForm((f) => ({ ...f, demand: e.target.value }))}
+          className="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-primary-bg outline-none focus:border-primary-accent"
+        >
+          <option>Mua đầu tư dài hạn</option>
+          <option>Mua để ở</option>
+          <option>Mua khai thác kinh doanh</option>
+          <option>Cần tư vấn thêm</option>
+        </select>
+      </div>
+      <button type="submit" disabled={loading}
+        className="w-full rounded-lg bg-primary-accent py-3.5 font-bold tracking-wide text-surface-light transition hover:bg-primary-accent-hover disabled:opacity-60"
+      >
+        {loading ? "Đang gửi..." : "NHẬN THÔNG TIN GĐ1 NGAY"}
+      </button>
+      <p className="flex items-center justify-center gap-1 text-center text-xs text-primary-bg/50">
+        <ShieldCheck size={12} /> Thông tin được bảo mật tuyệt đối
+      </p>
+    </form>
+  );
+}
 
-          <button
-            onClick={() => setIsFormOpen(true)}
-            className="rounded-lg bg-primary-accent px-4 py-2 text-sm font-bold hover:bg-primary-accent-hover"
+// ─── Popup Modal ─────────────────────────────────────────────
+function Popup({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const [done, setDone] = useState(false);
+
+  useEffect(() => {
+    if (!open) setTimeout(() => setDone(false), 300);
+  }, [open]);
+
+  if (!open) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-[70] flex items-center justify-center bg-black/75 p-4"
+      onClick={onClose}
+    >
+      <div
+        className="relative w-full max-w-md rounded-2xl bg-surface-light shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button onClick={onClose}
+          className="absolute right-3 top-3 rounded-full p-1.5 text-primary-bg/40 hover:bg-black/5 hover:text-primary-bg"
+        >
+          <X size={20} />
+        </button>
+
+        <div className="rounded-t-2xl bg-primary-bg px-6 py-5">
+          <h4 className="text-lg font-bold text-surface-light">Đăng ký nhận thông tin GĐ1</h4>
+          <p className="mt-1 text-sm text-surface-light/70">Chuyên viên sẽ liên hệ và gửi bảng giá + chính sách phù hợp.</p>
+        </div>
+
+        <div className="p-6">
+          {done ? (
+            <div className="py-8 text-center">
+              <CheckCircle2 size={48} className="mx-auto text-green-500" />
+              <p className="mt-3 font-bold text-primary-bg">Đăng ký thành công!</p>
+              <p className="mt-1 text-sm text-primary-bg/60">Đội ngũ tư vấn sẽ liên hệ sớm.</p>
+            </div>
+          ) : (
+            <LeadForm onSuccess={() => { setDone(true); setTimeout(onClose, 2500); }} />
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Page ─────────────────────────────────────────────────────
+export default function Page() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <main className="min-h-screen bg-primary-bg text-surface-light">
+
+      {/* ── HEADER ── */}
+      <header className="sticky top-0 z-40 border-b border-surface-light/10 bg-primary-bg/95 backdrop-blur">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+          <Image
+            src="https://vinhomeshocmonsr.vn/wp-content/uploads/2023/09/logo-vinhomes-hoc-mon.png"
+            alt="Vinhomes Hóc Môn"
+            width={130} height={40}
+            className="h-9 w-auto"
+          />
+          <button onClick={() => setOpen(true)}
+            className="rounded-lg bg-primary-accent px-5 py-2 text-sm font-bold transition hover:bg-primary-accent-hover"
           >
             Nhận bảng giá
           </button>
         </div>
       </header>
 
-      <section className="relative overflow-hidden border-b border-surface-light/15">
+      {/* ── 1. HERO ── */}
+      <section className="relative min-h-[92vh] overflow-hidden">
         <Image
           src="https://vinhomeshocmonsr.vn/wp-content/uploads/2025/11/phoi-canh-vinhomes-hoc-mon.jpg"
           alt="Phối cảnh Vinhomes Saigon Park"
-          fill
-          priority
-          className="object-cover"
+          fill priority className="object-cover object-center"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-primary-bg/80 to-primary-bg" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-primary-bg/70 to-primary-bg" />
 
-        <div className="relative mx-auto max-w-6xl px-4 py-14 md:py-24">
-          <div className="inline-flex w-fit items-center gap-2 rounded-full border border-primary-accent/60 bg-primary-accent/20 px-3 py-1 text-xs font-semibold text-surface-light">
-            <Sparkles size={14} /> Vinhomes Hóc Môn – Khu đô thị Đại học Quốc tế
-          </div>
+        <div className="relative mx-auto flex min-h-[92vh] max-w-6xl flex-col justify-center px-4 py-16">
+          {/* badge */}
+          <span className="mb-4 inline-flex w-fit items-center gap-2 rounded-full border border-surface-light/30 bg-white/10 px-3 py-1 text-xs font-semibold text-surface-light backdrop-blur-sm">
+            📍 Vinhomes Saigon Park · Hóc Môn · Cập nhật 01/05/2026
+          </span>
 
-          <h1 className="mt-4 text-4xl font-black uppercase leading-tight md:text-6xl">
-            VINHOMES HÓC MÔN
+          {/* H1 */}
+          <h1 className="max-w-4xl text-4xl font-black uppercase leading-[1.1] tracking-tight md:text-6xl lg:text-7xl">
+            VINHOMES HÓC MÔN<br />
+            <span className="text-primary-accent">KHU ĐÔ THỊ ĐẠI HỌC QUỐC TẾ</span>
           </h1>
-          <p className="mt-2 max-w-3xl text-base font-semibold text-surface-light/95 md:text-xl">
-            Cập nhật giá và chính sách giai đoạn 1 Vinhomes Saigon Park
+
+          <p className="mt-4 max-w-xl text-base text-surface-light/80 md:text-lg">
+            Thông tin, bảng giá và chính sách giai đoạn 1 từ đại lý F1 độc quyền.
           </p>
 
-          <div className="mt-7 grid gap-3 md:grid-cols-3">
+          {/* 3 cards */}
+          <div className="mt-8 grid gap-3 sm:grid-cols-3">
             {[
-              "Giá giai đoạn 1 ở vùng tham chiếu tốt để theo dõi điểm vào.",
-              "Rổ hàng đa dạng từ đại lý F1 độc quyền.",
-              "Ưu tiên cập nhật sản phẩm đẹp theo từng đợt mở bán.",
-            ].map((item) => (
-              <article key={item} className="rounded-xl border border-surface-light/20 bg-surface-light/10 p-4 backdrop-blur-sm">
-                <p className="text-sm leading-relaxed text-surface-light">{item}</p>
-              </article>
-            ))}
-          </div>
-
-          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-            <button
-              onClick={() => setIsFormOpen(true)}
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary-accent px-6 py-4 text-base font-bold shadow-lg shadow-primary-accent/30 transition hover:-translate-y-0.5 hover:bg-primary-accent-hover"
-            >
-              <Download size={18} /> Nhận cập nhật GĐ1
-            </button>
-            <button
-              onClick={() => setIsFormOpen(true)}
-              className="inline-flex items-center justify-center gap-2 rounded-lg border border-surface-light/40 bg-surface-light/10 px-6 py-4 text-base font-semibold text-surface-light transition hover:bg-surface-light/20"
-            >
-              Đăng ký theo dõi rổ hàng
-            </button>
-          </div>
-
-          <div className="mt-4 grid max-w-3xl grid-cols-1 gap-2 text-xs text-surface-light/85 sm:grid-cols-3">
-            <div className="inline-flex items-center gap-1.5">
-              <ShieldCheck size={14} className="text-surface-light" /> Bảo mật thông tin đăng ký
-            </div>
-            <div className="inline-flex items-center gap-1.5">
-              <CheckCircle2 size={14} className="text-surface-light" /> Cập nhật liên tục theo thị trường
-            </div>
-            <div className="inline-flex items-center gap-1.5">
-              <Landmark size={14} className="text-surface-light" /> Bám dữ liệu từ nguồn tham chiếu
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-surface-light px-4 py-12 text-primary-bg">
-        <div className="mx-auto max-w-6xl">
-          <h2 className="text-center text-2xl font-bold md:text-3xl">Thông tin pháp lý & tổng quan dự án</h2>
-          <div className="mx-auto mt-2 h-1 w-16 bg-primary-accent" />
-
-          <div className="mt-8 grid gap-3 md:grid-cols-2">
-            {overview.map((item) => (
-              <div key={item.label} className="rounded-lg border border-surface-warm/80 bg-white p-4">
-                <p className="text-xs font-semibold uppercase tracking-wide text-primary-accent">{item.label}</p>
-                <p className="mt-1 text-sm leading-relaxed text-primary-bg/90">{item.value}</p>
+              { emoji: "🏷️", title: "Giá GĐ1 vào điểm tốt nhất", sub: "Mức tham chiếu thấp nhất trong chu kỳ phát triển đại đô thị" },
+              { emoji: "🎯", title: "Rổ hàng độc quyền F1", sub: "Ưu tiên sản phẩm đẹp theo từng đợt mở bán chính thức" },
+              { emoji: "📋", title: "Chính sách thanh toán linh hoạt", sub: "Hỗ trợ tư vấn tài chính theo từng loại hình và ngân sách" },
+            ].map((c) => (
+              <div key={c.title}
+                className="rounded-xl border border-surface-light/20 bg-black/30 p-4 backdrop-blur-sm"
+              >
+                <div className="text-2xl">{c.emoji}</div>
+                <p className="mt-2 font-bold text-surface-light">{c.title}</p>
+                <p className="mt-1 text-xs leading-relaxed text-surface-light/70">{c.sub}</p>
               </div>
             ))}
           </div>
 
-          <p className="mt-4 text-xs text-primary-bg/65">
-            Lưu ý: Một số thông tin đang ở mức tham khảo thị trường và có thể điều chỉnh theo công bố chính thức từng thời điểm.
-          </p>
-        </div>
-      </section>
-
-      <section className="bg-surface-warm/10 px-4 py-14">
-        <div className="mx-auto max-w-6xl">
-          <h3 className="text-center text-2xl font-bold md:text-3xl">4 luận điểm đầu tư đáng chú ý</h3>
-          <div className="mt-8 grid gap-4 md:grid-cols-2">
-            {investmentReasons.map((reason) => (
-              <article key={reason.title} className="rounded-xl border border-support-teal/30 bg-primary-bg/50 p-5">
-                <h4 className="text-lg font-semibold text-surface-warm">{reason.title}</h4>
-                <p className="mt-2 text-sm text-surface-light/85">{reason.desc}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-surface-light px-4 py-14 text-primary-bg">
-        <div className="mx-auto max-w-6xl">
-          <h3 className="text-center text-2xl font-bold md:text-3xl">Loại hình sản phẩm phù hợp từng mục tiêu</h3>
-          <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {productCards.map((item) => (
-              <article key={item.title} className="rounded-xl border border-surface-warm/70 bg-white p-5">
-                <h4 className="text-lg font-bold">{item.title}</h4>
-                <p className="mt-2 text-sm text-primary-bg/70">{item.desc}</p>
-                <button
-                  onClick={() => setIsFormOpen(true)}
-                  className="mt-4 inline-flex items-center gap-1 text-sm font-bold text-primary-accent hover:gap-2"
-                >
-                  Nhận giỏ hàng tham khảo <ChevronRight size={16} />
-                </button>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="px-4 py-14">
-        <div className="mx-auto max-w-6xl">
-          <div className="mb-6 flex items-end justify-between gap-4">
-            <div>
-              <h3 className="text-2xl font-bold md:text-3xl">Bảng giá dự kiến theo loại hình</h3>
-              <p className="mt-2 text-sm text-surface-light/80">Dùng để so sánh nhanh ngân sách trước khi chốt tư vấn 1-1.</p>
-            </div>
-            <button
-              onClick={() => setIsFormOpen(true)}
-              className="hidden rounded-lg bg-primary-accent px-4 py-2 text-sm font-bold hover:bg-primary-accent-hover md:block"
+          {/* CTAs */}
+          <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+            <button onClick={() => setOpen(true)}
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary-accent px-7 py-4 text-base font-bold shadow-lg shadow-primary-accent/40 transition hover:-translate-y-0.5 hover:bg-primary-accent-hover"
             >
-              Nhận bảng giá chi tiết
+              Nhận thông tin GĐ1 ngay
+            </button>
+            <button onClick={() => setOpen(true)}
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-surface-light/40 bg-white/10 px-7 py-4 text-base font-semibold backdrop-blur-sm transition hover:bg-white/20"
+            >
+              Xem chính sách thanh toán
             </button>
           </div>
+        </div>
+      </section>
 
-          <div className="overflow-hidden rounded-xl border border-support-teal/30">
-            <table className="w-full text-left text-sm">
-              <thead className="bg-support-teal/25 text-surface-warm">
-                <tr>
-                  <th className="px-4 py-3">Loại sản phẩm</th>
-                  <th className="px-4 py-3">Diện tích tham khảo</th>
-                  <th className="px-4 py-3">Giá dự kiến</th>
-                </tr>
-              </thead>
-              <tbody>
-                {pricingRows.map((row) => (
-                  <tr key={row[0]} className="border-t border-support-teal/25">
-                    <td className="px-4 py-3 font-medium">{row[0]}</td>
-                    <td className="px-4 py-3 text-surface-light/85">{row[1]}</td>
-                    <td className="px-4 py-3 text-surface-warm">{row[2]}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+      {/* ── 2. TỔNG QUAN DỰ ÁN ── */}
+      <section className="bg-surface-light py-16 text-primary-bg">
+        <div className="mx-auto max-w-6xl px-4">
+          <h2 className="text-2xl font-bold md:text-3xl">Tổng quan dự án</h2>
+          <div className="mt-1 h-1 w-12 bg-primary-accent" />
+
+          <div className="mt-8 grid gap-8 lg:grid-cols-2">
+            {/* table */}
+            <div className="divide-y divide-gray-100 rounded-xl border border-gray-100 bg-white shadow-sm">
+              {OVERVIEW.map((row) => (
+                <div key={row.label} className="flex gap-3 px-5 py-3.5">
+                  <span className="w-36 shrink-0 text-xs font-semibold uppercase tracking-wide text-primary-accent">{row.label}</span>
+                  <span className="text-sm text-primary-bg/80">{row.value}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* slideshow */}
+            <Slideshow />
           </div>
 
-          <p className="mt-3 text-xs text-surface-light/65">
-            *Giá trên là mức tham khảo tổng hợp từ nguồn thị trường, chưa thay thế thông báo giá chính thức từ chủ đầu tư/đơn vị phân phối.
+          <p className="mt-4 text-xs text-primary-bg/40">
+            * Một số thông tin mang tính tham khảo thị trường, có thể điều chỉnh theo công bố chính thức từng thời điểm.
           </p>
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-6xl gap-8 px-4 py-14 md:grid-cols-2">
-        <div>
-          <h3 className="text-2xl font-bold md:text-3xl">3 lý do phù hợp mua ở dài hạn</h3>
-          <ul className="mt-5 space-y-4 text-sm text-surface-light/90 md:text-base">
-            {livingReasons.map((line) => (
-              <li key={line} className="flex items-start gap-2">
-                <ChevronRight size={18} className="mt-0.5 text-surface-warm" />
-                <span>{line}</span>
-              </li>
+      {/* ── 3. LUẬN ĐIỂM ĐẦU TƯ ── */}
+      <section className="py-16">
+        <div className="mx-auto max-w-6xl px-4">
+          <h2 className="text-2xl font-bold md:text-3xl">Tại sao đầu tư GĐ1?</h2>
+          <div className="mt-1 h-1 w-12 bg-primary-accent" />
+
+          <div className="mt-8 grid gap-5 sm:grid-cols-2">
+            {INVESTMENT.map((item) => (
+              <div key={item.title}
+                className="rounded-2xl border border-surface-light/10 bg-surface-light/5 p-6"
+              >
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary-accent/20">
+                  <item.icon size={22} className="text-primary-accent" style={{ color: "#FBF7F4" }} />
+                </div>
+                <h3 className="mt-4 text-lg font-bold text-surface-light">{item.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-surface-light/70">{item.desc}</p>
+              </div>
             ))}
-          </ul>
-
-          <button
-            onClick={() => setIsFormOpen(true)}
-            className="mt-6 inline-flex items-center gap-2 rounded-lg bg-primary-accent px-5 py-3 text-sm font-bold hover:bg-primary-accent-hover"
-          >
-            Nhận tư vấn theo nhu cầu ở thật <ChevronRight size={16} />
-          </button>
-        </div>
-
-        <div className="overflow-hidden rounded-2xl border border-support-teal/40">
-          <Image
-            src="https://vinhomeshocmonsr.vn/wp-content/uploads/2025/11/phoi-canh-vinhomes-hoc-mon.jpg"
-            alt="Khu đô thị Vinhomes Saigon Park"
-            width={1200}
-            height={800}
-            className="h-full w-full object-cover"
-          />
+          </div>
         </div>
       </section>
 
+      {/* ── 4. LOẠI HÌNH SẢN PHẨM ── */}
+      <section className="bg-surface-light py-16 text-primary-bg">
+        <div className="mx-auto max-w-6xl px-4">
+          <h2 className="text-2xl font-bold md:text-3xl">Loại hình sản phẩm</h2>
+          <div className="mt-1 h-1 w-12 bg-primary-accent" />
 
-      <section className="px-4 pb-12">
-        <div className="mx-auto max-w-4xl rounded-2xl border border-support-teal/30 bg-support-teal/15 p-8 text-center">
-          <h3 className="text-2xl font-bold">Nhận bảng giá + chính sách giai đoạn 1 mới nhất</h3>
-          <p className="mx-auto mt-3 max-w-2xl text-surface-light/85">
-            Đăng ký trong 30 giây để nhận tài liệu đầy đủ theo mục tiêu ở thực hoặc đầu tư của anh/chị.
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {PRODUCTS.map((p) => (
+              <div key={p.title}
+                className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition hover:shadow-md"
+              >
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-bg">
+                  <p.icon size={20} className="text-surface-light" />
+                </div>
+                <h3 className="mt-4 text-lg font-bold">{p.title}</h3>
+                <p className="mt-0.5 text-sm font-semibold text-primary-accent">{p.price}</p>
+                <p className="mt-2 text-sm text-primary-bg/60">{p.desc}</p>
+                <button onClick={() => setOpen(true)}
+                  className="mt-4 text-sm font-bold text-primary-accent hover:underline"
+                >
+                  Nhận giỏ hàng tham khảo →
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── 5. CTA CUỐI TRANG ── */}
+      <section className="py-16">
+        <div className="mx-auto max-w-3xl px-4 text-center">
+          <h2 className="text-2xl font-bold md:text-3xl">
+            Đăng ký nhận bảng giá & chính sách GĐ1
+          </h2>
+          <p className="mt-3 text-surface-light/70">
+            Điền thông tin để nhận tư vấn 1-1 từ đại lý F1 độc quyền Vinhomes Saigon Park.
           </p>
-          <button
-            onClick={() => setIsFormOpen(true)}
-            className="mt-6 inline-flex items-center gap-2 rounded-lg bg-primary-accent px-6 py-3 text-base font-bold hover:bg-primary-accent-hover"
-          >
-            <Download size={18} /> Đăng ký nhận ngay
-          </button>
+
+          <div className="mx-auto mt-8 max-w-md rounded-2xl bg-surface-light p-6 text-left shadow-xl">
+            <LeadForm onSuccess={() => setOpen(false)} />
+          </div>
+
+          <div className="mt-6 flex items-center justify-center gap-6 text-sm text-surface-light/60">
+            <span className="flex items-center gap-1.5"><ShieldCheck size={14} /> Bảo mật</span>
+            <span>🎯 Đại lý F1</span>
+            <span>💬 Tư vấn 1-1</span>
+          </div>
         </div>
       </section>
 
-      <footer className="border-t border-support-teal/30 bg-primary-bg/80 px-4 py-10">
-        <div className="mx-auto max-w-6xl">
-          <h4 className="text-lg font-semibold text-surface-warm">Thông tin doanh nghiệp / chứng chỉ hành nghề</h4>
-          <div className="mt-3 rounded-xl border border-support-teal/30 bg-support-teal/10 p-4 text-sm text-surface-light/85">
-            <p>Em đã chừa sẵn block credential theo yêu cầu.</p>
-            <p className="mt-1">Anh gửi giúp em text trong ảnh (Tên công ty, MST, địa chỉ, pháp lý, liên hệ...) để em điền chuẩn và push ngay.</p>
+      {/* ── 6. CREDENTIAL FOOTER ── */}
+      <footer className="border-t border-surface-light/10 bg-primary-bg py-10">
+        <div className="mx-auto max-w-6xl px-4">
+          <div className="grid gap-8 md:grid-cols-2">
+
+            {/* trái: thông tin công ty */}
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-widest text-surface-light/40">Đơn vị phân phối</p>
+              <p className="mt-3 text-base font-bold text-surface-light">CÔNG TY TNHH VICTORY HOME VIỆT NAM</p>
+              <p className="text-xs text-surface-light/50">VICTORY HOMES VIETNAM COMPANY LIMITED</p>
+
+              <dl className="mt-4 space-y-2 text-sm text-surface-light/70">
+                <div className="flex gap-2">
+                  <dt className="w-36 shrink-0 text-surface-light/40">MST</dt>
+                  <dd>0110010723</dd>
+                </div>
+                <div className="flex gap-2">
+                  <dt className="w-36 shrink-0 text-surface-light/40">Địa chỉ</dt>
+                  <dd>Đường Giáp Bát, Phường Hoàng Mai, Hà Nội</dd>
+                </div>
+                <div className="flex gap-2">
+                  <dt className="w-36 shrink-0 text-surface-light/40">Điện thoại</dt>
+                  <dd>
+                    <a href={`tel:0916174985`} className="hover:text-surface-light">0916 174 985</a>
+                  </dd>
+                </div>
+                <div className="flex gap-2">
+                  <dt className="w-36 shrink-0 text-surface-light/40">Email</dt>
+                  <dd>
+                    <a href="mailto:hasonanland@gmail.com" className="hover:text-surface-light">hasonanland@gmail.com</a>
+                  </dd>
+                </div>
+                <div className="flex gap-2">
+                  <dt className="w-36 shrink-0 text-surface-light/40">Người đại diện</dt>
+                  <dd>Phạm Quốc Tuấn – Giám đốc</dd>
+                </div>
+              </dl>
+            </div>
+
+            {/* phải: disclaimer */}
+            <div className="rounded-xl border border-surface-light/10 bg-surface-light/5 p-5">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-surface-light/40">Lưu ý quan trọng</p>
+              <p className="text-xs leading-relaxed text-surface-light/55">
+                Thông tin, hình ảnh, các tiện ích trên website chỉ mang tính chất tương đối và có thể được điều chỉnh theo quyết định của Chủ đầu tư tại từng thời điểm đảm bảo phù hợp quy hoạch và thực tế thi công Dự án. Các thông tin, cam kết chính thức sẽ được quy định cụ thể tại Hợp đồng mua bán. Việc quản lý, vận hành và kinh doanh của khu đô thị sẽ theo quy định của Ban quản lý.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-8 border-t border-surface-light/10 pt-5 text-center text-xs text-surface-light/30">
+            © {new Date().getFullYear()} Victory Home Việt Nam · Trang thông tin tham khảo thị trường
           </div>
         </div>
       </footer>
 
-      <div className="fixed bottom-0 left-0 z-50 flex w-full gap-3 border-t border-surface-light/20 bg-primary-bg p-3 md:hidden">
-        <button onClick={() => setIsFormOpen(true)} className="flex-1 rounded-lg bg-surface-light/15 px-3 py-3 text-center text-sm font-bold text-surface-light">
-          Theo dõi rổ hàng
-        </button>
-        <button onClick={() => setIsFormOpen(true)} className="flex-1 rounded-lg bg-primary-accent px-3 py-3 text-sm font-bold text-surface-light">
-          Nhận cập nhật GĐ1
+      {/* ── MOBILE STICKY BAR ── */}
+      <div className="fixed bottom-0 left-0 z-50 flex w-full gap-2 border-t border-surface-light/10 bg-primary-bg/95 p-3 backdrop-blur md:hidden">
+        <a href={`tel:${PHONE}`}
+          className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-surface-light/30 py-3 text-sm font-bold"
+        >
+          <Phone size={16} /> {PHONE_DISPLAY}
+        </a>
+        <button onClick={() => setOpen(true)}
+          className="flex-1 rounded-xl bg-primary-accent py-3 text-sm font-bold"
+        >
+          Nhận thông tin GĐ1
         </button>
       </div>
 
-      <div className="fixed right-4 top-1/2 z-50 hidden -translate-y-1/2 flex-col gap-3 md:flex">
-        <a
-          href={ZALO_LINK}
-          target="_blank"
-          rel="noreferrer"
-          className="flex h-12 w-12 items-center justify-center rounded-full border border-surface-light/35 bg-surface-light/15 text-surface-light backdrop-blur hover:bg-surface-light/25"
-          aria-label="Liên hệ Zalo"
+      {/* ── FLOATING ZALO/CALL (desktop) ── */}
+      <div className="fixed bottom-8 right-4 z-50 flex flex-col gap-3">
+        <a href={ZALO} target="_blank" rel="noreferrer"
+          className="flex h-12 w-12 items-center justify-center rounded-full border border-surface-light/20 bg-surface-light/10 text-surface-light backdrop-blur hover:bg-surface-light/25"
+          aria-label="Zalo"
         >
-          <MessageCircle size={20} />
+          <MessageCircle size={22} />
         </a>
-        <a
-          href={`tel:${CONTACT_PHONE}`}
+        <a href={`tel:${PHONE}`}
           className="flex h-12 w-12 items-center justify-center rounded-full bg-primary-accent text-surface-light hover:bg-primary-accent-hover"
           aria-label="Gọi ngay"
         >
-          <Phone size={20} />
+          <Phone size={22} />
         </a>
       </div>
 
-      {isFormOpen && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 p-4">
-          <div className="relative w-full max-w-md rounded-2xl bg-surface-light text-primary-bg">
-            <button
-              onClick={() => setIsFormOpen(false)}
-              className="absolute right-3 top-3 rounded-full p-1 text-primary-bg/60 hover:bg-black/5"
-            >
-              <X size={20} />
-            </button>
-
-            <div className="rounded-t-2xl bg-primary-bg px-6 py-5 text-surface-light">
-              <h4 className="text-xl font-bold">Đăng ký nhận bảng giá Vinhomes Saigon Park</h4>
-              <p className="mt-1 text-sm text-surface-warm">Chuyên viên sẽ liên hệ và gửi thông tin phù hợp với nhu cầu của anh/chị.</p>
-            </div>
-
-            <div className="p-6">
-              {isSuccess ? (
-                <div className="py-8 text-center">
-                  <CheckCircle2 className="mx-auto text-green-600" size={46} />
-                  <p className="mt-3 font-semibold">Đăng ký thành công!</p>
-                  <p className="mt-1 text-sm text-primary-bg/70">Đội ngũ tư vấn sẽ liên hệ sớm.</p>
-                </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div>
-                    <label className="mb-1 block text-sm font-medium">Họ và tên *</label>
-                    <input
-                      required
-                      value={formState.fullName}
-                      onChange={(e) => setFormState((p) => ({ ...p, fullName: e.target.value }))}
-                      className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-primary-accent"
-                      placeholder="Nguyễn Văn A"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="mb-1 block text-sm font-medium">Số điện thoại *</label>
-                    <input
-                      required
-                      value={formState.phone}
-                      onChange={(e) => setFormState((p) => ({ ...p, phone: e.target.value }))}
-                      className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-primary-accent"
-                      placeholder="09xxxxxxxx"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="mb-1 block text-sm font-medium">Nhu cầu quan tâm</label>
-                    <select
-                      value={formState.demand}
-                      onChange={(e) => setFormState((p) => ({ ...p, demand: e.target.value }))}
-                      className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 outline-none focus:border-primary-accent"
-                    >
-                      <option>Mua đầu tư dài hạn</option>
-                      <option>Mua để ở</option>
-                      <option>Mua khai thác kinh doanh</option>
-                      <option>Cần tư vấn thêm</option>
-                    </select>
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="mt-2 w-full rounded-lg bg-primary-accent py-3 font-bold text-surface-light hover:bg-primary-accent-hover disabled:opacity-70"
-                  >
-                    {isSubmitting ? "Đang gửi..." : "NHẬN BẢNG GIÁ NGAY"}
-                  </button>
-
-                  <p className="text-center text-xs text-primary-bg/60">
-                    <ShieldCheck size={12} className="mr-1 inline" /> Thông tin được bảo mật tuyệt đối.
-                  </p>
-                </form>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
+      {/* ── POPUP ── */}
+      <Popup open={open} onClose={() => setOpen(false)} />
     </main>
   );
 }
