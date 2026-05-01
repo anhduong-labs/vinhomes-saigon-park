@@ -2,20 +2,7 @@
 
 import Image from "next/image";
 import { useMemo, useState } from "react";
-import {
-  Building2,
-  CheckCircle2,
-  ChevronRight,
-  Clock3,
-  Download,
-  Landmark,
-  Leaf,
-  MapPin,
-  Phone,
-  ShieldCheck,
-  Sparkles,
-  X,
-} from "lucide-react";
+import { CheckCircle2, ChevronRight, Download, Landmark, ShieldCheck, Sparkles, X } from "lucide-react";
 
 type FormState = {
   fullName: string;
@@ -34,12 +21,6 @@ const overview = [
   { label: "Tệp khách hàng", value: "An cư dài hạn + đầu tư trung và dài hạn" },
 ];
 
-const quickStats = [
-  { label: "Quy mô", value: "924ha", icon: Building2 },
-  { label: "Mật độ xây dựng", value: "25%", icon: Leaf },
-  { label: "Dự kiến triển khai", value: "2026", icon: Clock3 },
-  { label: "Vị trí", value: "Tây Bắc TP.HCM", icon: MapPin },
-];
 
 const pricingRows = [
   ["Căn hộ Studio", "30–33 m²", "Từ ~1.6 tỷ"],
@@ -100,32 +81,6 @@ const productCards = [
   },
 ];
 
-const faqs = [
-  {
-    q: "Giá bán chính thức đã công bố chưa?",
-    a: "Hiện thị trường vẫn đang cập nhật theo từng giai đoạn. Bảng trong trang là mức tham khảo tổng hợp, chưa thay thế thông báo chính thức.",
-  },
-  {
-    q: "Nên vào giai đoạn nào để tối ưu biên an toàn?",
-    a: "Thực tế nhiều nhà đầu tư ưu tiên giai đoạn đầu để có chính sách tốt hơn. Tuy nhiên vẫn cần so sánh pháp lý, tiến độ và dòng tiền cá nhân.",
-  },
-  {
-    q: "Dự án phù hợp mua ở hay mua đầu tư?",
-    a: "Có thể phù hợp cả hai tùy loại hình. Căn hộ/nhà phố thường linh hoạt hơn, còn biệt thự thiên về tài sản dài hạn.",
-  },
-  {
-    q: "Form đăng ký sẽ nhận gì?",
-    a: "Khách sẽ nhận bản cập nhật bảng giá, chính sách và tài liệu phân tích tổng hợp theo tệp nhu cầu đã chọn.",
-  },
-  {
-    q: "Khi nào có thể nhận giỏ hàng chi tiết?",
-    a: "Ngay khi có cập nhật mới từ đội ngũ tư vấn thị trường, hệ thống sẽ gửi theo thông tin khách đã đăng ký.",
-  },
-  {
-    q: "Thông tin cá nhân có được bảo mật không?",
-    a: "Có. Dữ liệu lead chỉ dùng cho mục đích tư vấn dự án và không chia sẻ ra bên ngoài.",
-  },
-];
 
 export default function Home() {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -192,32 +147,32 @@ export default function Home() {
 
         <div className="relative mx-auto flex max-w-6xl flex-col gap-5 px-4 py-14 md:py-24">
           <div className="inline-flex w-fit items-center gap-2 rounded-full border border-primary-accent/50 bg-primary-accent/20 px-3 py-1 text-xs font-semibold text-surface-warm">
-            <Sparkles size={14} /> Giỏ hàng nội bộ & chính sách giai đoạn đầu
+            <Sparkles size={14} /> Vinhomes Hóc Môn – Khu đô thị Đại học Quốc tế
           </div>
 
           <h1 className="max-w-4xl text-3xl font-extrabold leading-tight md:text-5xl">
-            BẢNG GIÁ DỰ KIẾN VINHOMES SAIGON PARK HÓC MÔN
-            <span className="block text-surface-warm">Nhận file phân tích đầu tư 2026–2030 trong 2 phút</span>
+            Cập nhật giá và chính sách giai đoạn 1 Vinhomes Saigon Park
           </h1>
 
-          <p className="max-w-3xl text-sm text-surface-light/90 md:text-lg">
-            Tổng hợp nhanh: thông số dự án, khung giá theo loại hình, phân tích vị trí – hạ tầng – tiềm năng,
-            và checklist chọn sản phẩm phù hợp mục tiêu ở / đầu tư.
-          </p>
+          <div className="max-w-3xl space-y-2 text-sm text-surface-light/90 md:text-base">
+            <p>• Giá giai đoạn 1 đang ở vùng tham chiếu tốt để đầu tư trung & dài hạn.</p>
+            <p>• Rổ hàng đa dạng từ đại lý F1 độc quyền.</p>
+            <p>• Ưu tiên cập nhật sản phẩm đẹp theo từng đợt mở bán.</p>
+          </div>
 
           <div className="flex flex-col gap-3 sm:flex-row">
             <button
               onClick={() => setIsFormOpen(true)}
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary-accent px-6 py-4 text-base font-bold shadow-lg shadow-primary-accent/30 transition hover:-translate-y-0.5 hover:bg-primary-accent-hover"
             >
-              <Download size={18} /> Nhận bảng giá ngay
+              <Download size={18} /> Nhận cập nhật GĐ1
             </button>
-            <a
-              href="tel:0975442140"
+            <button
+              onClick={() => setIsFormOpen(true)}
               className="inline-flex items-center justify-center gap-2 rounded-lg border border-surface-warm/40 bg-support-teal/35 px-6 py-4 text-base font-semibold transition hover:bg-support-teal/60"
             >
-              <Phone size={18} /> Hotline 0975 442 140
-            </a>
+              Đăng ký theo dõi rổ hàng
+            </button>
           </div>
 
           <div className="mt-2 grid max-w-3xl grid-cols-1 gap-2 text-xs text-surface-light/80 sm:grid-cols-3">
@@ -254,20 +209,36 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bg-primary-bg px-4 py-12">
+      <section className="bg-surface-warm/10 px-4 py-14">
         <div className="mx-auto max-w-6xl">
-          <h2 className="text-center text-2xl font-bold md:text-3xl">Thông số nhanh</h2>
-          <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4">
-            {quickStats.map((item) => {
-              const Icon = item.icon;
-              return (
-                <article key={item.label} className="rounded-xl border border-support-teal/40 bg-support-teal/10 p-4 text-center">
-                  <Icon className="mx-auto mb-2 text-surface-warm" size={26} />
-                  <p className="text-lg font-bold">{item.value}</p>
-                  <p className="text-sm text-surface-light/75">{item.label}</p>
-                </article>
-              );
-            })}
+          <h3 className="text-center text-2xl font-bold md:text-3xl">4 luận điểm đầu tư đáng chú ý</h3>
+          <div className="mt-8 grid gap-4 md:grid-cols-2">
+            {investmentReasons.map((reason) => (
+              <article key={reason.title} className="rounded-xl border border-support-teal/30 bg-primary-bg/50 p-5">
+                <h4 className="text-lg font-semibold text-surface-warm">{reason.title}</h4>
+                <p className="mt-2 text-sm text-surface-light/85">{reason.desc}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-surface-light px-4 py-14 text-primary-bg">
+        <div className="mx-auto max-w-6xl">
+          <h3 className="text-center text-2xl font-bold md:text-3xl">Loại hình sản phẩm phù hợp từng mục tiêu</h3>
+          <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {productCards.map((item) => (
+              <article key={item.title} className="rounded-xl border border-surface-warm/70 bg-white p-5">
+                <h4 className="text-lg font-bold">{item.title}</h4>
+                <p className="mt-2 text-sm text-primary-bg/70">{item.desc}</p>
+                <button
+                  onClick={() => setIsFormOpen(true)}
+                  className="mt-4 inline-flex items-center gap-1 text-sm font-bold text-primary-accent hover:gap-2"
+                >
+                  Nhận giỏ hàng tham khảo <ChevronRight size={16} />
+                </button>
+              </article>
+            ))}
           </div>
         </div>
       </section>
@@ -314,20 +285,6 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bg-surface-warm/10 px-4 py-14">
-        <div className="mx-auto max-w-6xl">
-          <h3 className="text-center text-2xl font-bold md:text-3xl">4 luận điểm đầu tư đáng chú ý</h3>
-          <div className="mt-8 grid gap-4 md:grid-cols-2">
-            {investmentReasons.map((reason) => (
-              <article key={reason.title} className="rounded-xl border border-support-teal/30 bg-primary-bg/50 p-5">
-                <h4 className="text-lg font-semibold text-surface-warm">{reason.title}</h4>
-                <p className="mt-2 text-sm text-surface-light/85">{reason.desc}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <section className="mx-auto grid max-w-6xl gap-8 px-4 py-14 md:grid-cols-2">
         <div>
           <h3 className="text-2xl font-bold md:text-3xl">3 lý do phù hợp mua ở dài hạn</h3>
@@ -359,43 +316,10 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bg-surface-light px-4 py-14 text-primary-bg">
-        <div className="mx-auto max-w-6xl">
-          <h3 className="text-center text-2xl font-bold md:text-3xl">Loại hình sản phẩm phù hợp từng mục tiêu</h3>
-          <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {productCards.map((item) => (
-              <article key={item.title} className="rounded-xl border border-surface-warm/70 bg-white p-5">
-                <h4 className="text-lg font-bold">{item.title}</h4>
-                <p className="mt-2 text-sm text-primary-bg/70">{item.desc}</p>
-                <button
-                  onClick={() => setIsFormOpen(true)}
-                  className="mt-4 inline-flex items-center gap-1 text-sm font-bold text-primary-accent hover:gap-2"
-                >
-                  Nhận giỏ hàng tham khảo <ChevronRight size={16} />
-                </button>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      <section className="px-4 py-14">
-        <div className="mx-auto max-w-6xl">
-          <h3 className="text-center text-2xl font-bold md:text-3xl">FAQ – câu hỏi thường gặp</h3>
-          <div className="mt-8 space-y-3">
-            {faqs.map((faq) => (
-              <article key={faq.q} className="rounded-lg border border-support-teal/30 bg-support-teal/10 p-4">
-                <h4 className="font-semibold text-surface-warm">{faq.q}</h4>
-                <p className="mt-1 text-sm text-surface-light/85">{faq.a}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="px-4 pb-16">
+      <section className="px-4 pb-12">
         <div className="mx-auto max-w-4xl rounded-2xl border border-support-teal/30 bg-support-teal/15 p-8 text-center">
-          <h3 className="text-2xl font-bold">Nhận bảng giá + file phân tích + chính sách mới nhất</h3>
+          <h3 className="text-2xl font-bold">Nhận bảng giá + chính sách giai đoạn 1 mới nhất</h3>
           <p className="mx-auto mt-3 max-w-2xl text-surface-light/85">
             Đăng ký trong 30 giây để nhận tài liệu đầy đủ theo mục tiêu ở thực hoặc đầu tư của anh/chị.
           </p>
@@ -408,12 +332,22 @@ export default function Home() {
         </div>
       </section>
 
+      <footer className="border-t border-support-teal/30 bg-primary-bg/80 px-4 py-10">
+        <div className="mx-auto max-w-6xl">
+          <h4 className="text-lg font-semibold text-surface-warm">Thông tin doanh nghiệp / chứng chỉ hành nghề</h4>
+          <div className="mt-3 rounded-xl border border-support-teal/30 bg-support-teal/10 p-4 text-sm text-surface-light/85">
+            <p>Em đã chừa sẵn block credential theo yêu cầu.</p>
+            <p className="mt-1">Anh gửi giúp em text trong ảnh (Tên công ty, MST, địa chỉ, pháp lý, liên hệ...) để em điền chuẩn và push ngay.</p>
+          </div>
+        </div>
+      </footer>
+
       <div className="fixed bottom-0 left-0 z-50 flex w-full gap-3 border-t border-surface-warm/20 bg-primary-bg p-3 md:hidden">
-        <a href="tel:0975442140" className="flex-1 rounded-lg bg-support-teal px-3 py-3 text-center text-sm font-bold">
-          Gọi ngay
-        </a>
+        <button onClick={() => setIsFormOpen(true)} className="flex-1 rounded-lg bg-support-teal px-3 py-3 text-center text-sm font-bold">
+          Theo dõi rổ hàng
+        </button>
         <button onClick={() => setIsFormOpen(true)} className="flex-1 rounded-lg bg-primary-accent px-3 py-3 text-sm font-bold">
-          Nhận bảng giá
+          Nhận cập nhật GĐ1
         </button>
       </div>
 
