@@ -8,6 +8,7 @@ import {
   ChevronRight,
   Clock3,
   Download,
+  Landmark,
   Leaf,
   MapPin,
   Phone,
@@ -22,58 +23,108 @@ type FormState = {
   demand: string;
 };
 
-const stats = [
+const overview = [
+  { label: "Tên dự án", value: "Vinhomes Saigon Park (thị trường thường gọi Vinhomes Hóc Môn)" },
+  { label: "Vị trí", value: "Xã Xuân Thới Sơn, khu vực Hóc Môn, TP.HCM" },
+  { label: "Quy mô", value: "Khoảng 924ha" },
+  { label: "Mật độ xây dựng", value: "Khoảng 25%" },
+  { label: "Loại hình", value: "Căn hộ, nhà phố, shophouse, biệt thự song lập & đơn lập" },
+  { label: "Tiến độ thị trường", value: "Đang trong giai đoạn cập nhật thông tin mở bán" },
+  { label: "Sở hữu", value: "Tham khảo: lâu dài với khách Việt, theo quy định hiện hành với khách nước ngoài" },
+  { label: "Tệp khách hàng", value: "An cư dài hạn + đầu tư trung và dài hạn" },
+];
+
+const quickStats = [
   { label: "Quy mô", value: "924ha", icon: Building2 },
   { label: "Mật độ xây dựng", value: "25%", icon: Leaf },
-  { label: "Dự kiến mở bán", value: "Q2/2026", icon: Clock3 },
-  { label: "Vị trí", value: "Hóc Môn, TP.HCM", icon: MapPin },
+  { label: "Dự kiến triển khai", value: "2026", icon: Clock3 },
+  { label: "Vị trí", value: "Tây Bắc TP.HCM", icon: MapPin },
 ];
 
-const reasons = [
+const pricingRows = [
+  ["Căn hộ Studio", "30–33 m²", "Từ ~1.6 tỷ"],
+  ["Căn hộ 1PN", "45–55 m²", "Từ ~2.3 tỷ"],
+  ["Căn hộ 2PN", "65–80 m²", "Từ ~3.5–5.0 tỷ"],
+  ["Căn hộ 3PN", "90–120 m²", "Từ ~4.5–7.0 tỷ"],
+  ["Nhà phố liền kề", "60–100 m² đất", "Từ ~7–12 tỷ"],
+  ["Shophouse thương mại", "100–150 m² đất", "Từ ~12–16 tỷ"],
+  ["Biệt thự song lập", "120–200 m² đất", "Từ ~16–25 tỷ"],
+  ["Biệt thự đơn lập", "200–400 m² đất", "Từ ~20–50 tỷ"],
+];
+
+const investmentReasons = [
   {
-    title: "Mảnh ghép chiến lược Tây Bắc",
-    desc: "Nằm trên trục phát triển Tây Bắc TP.HCM, hưởng lợi từ dòng dân cư và hạ tầng mở rộng nhiều năm tới.",
+    title: "Cửa ngõ Tây Bắc + trục Quốc lộ 22",
+    desc: "Vị trí bám trục giao thông liên vùng giúp gia tăng nhu cầu ở thực, khai thác kinh doanh và cho thuê trong dài hạn.",
   },
   {
-    title: "Đón đầu hạ tầng lớn",
-    desc: "Quốc lộ 22, Metro số 2 và cao tốc TP.HCM – Mộc Bài giúp tăng khả năng kết nối và tiềm năng tăng giá.",
+    title: "Hưởng lợi hạ tầng lớn theo chu kỳ 3–5 năm",
+    desc: "Metro số 2, vành đai, cao tốc TP.HCM – Mộc Bài là nhóm yếu tố có thể kéo mặt bằng giá khu Tây Bắc đi lên khi hoàn thiện.",
   },
   {
-    title: "Quỹ đất hiếm trong lòng TP",
-    desc: "Đại đô thị 924ha hiếm hoi đủ lớn để hình thành hệ sinh thái sống – học – làm việc – giải trí hoàn chỉnh.",
+    title: "Quỹ đất 924ha hiếm trong TP.HCM",
+    desc: "Quy mô lớn cho phép hình thành hệ tiện ích khép kín, không chỉ bán nhà đơn lẻ mà bán cả chất lượng sống và hệ sinh thái đô thị.",
+  },
+  {
+    title: "Mô hình đại đô thị Vinhomes đã có tiền lệ",
+    desc: "Các đại đô thị Vinhomes trước đó cho thấy lợi thế khi mua sớm ở giai đoạn đầu chu kỳ, đặc biệt với nhà đầu tư giữ trung hạn.",
   },
 ];
 
-const productTypes = [
+const livingReasons = [
+  "Hệ sinh thái all-in-one: trường học, y tế, mua sắm, công viên và tiện ích nội khu.",
+  "Mật độ xây dựng thấp, ưu tiên mảng xanh và không gian sinh hoạt cho gia đình.",
+  "Kết nối đi làm phù hợp với khu vực Tân Bình, Quận 12, Tân Phú, trung tâm theo trục chính.",
+];
+
+const productCards = [
   {
     title: "Nhà phố",
-    desc: "Linh hoạt để ở, cho thuê hoặc khai thác kinh doanh, phù hợp nhu cầu ở thực lẫn đầu tư dài hạn.",
+    desc: "Phù hợp vừa ở vừa khai thác cho thuê, cân bằng giữa thanh khoản và tiềm năng tăng giá.",
   },
   {
     title: "Shophouse",
-    desc: "Mặt tiền thương mại nội khu, tiềm năng tạo dòng tiền từ cho thuê và kinh doanh dịch vụ.",
+    desc: "Ưu tiên trục thương mại nội khu, phù hợp nhóm khách hàng tập trung dòng tiền kinh doanh.",
   },
   {
     title: "Biệt thự song lập",
-    desc: "Không gian sống riêng tư, cân bằng giữa tiêu chuẩn sống cao cấp và tài chính hợp lý hơn đơn lập.",
+    desc: "Nâng cấp không gian sống cho gia đình có tài chính tốt, tối ưu hơn đơn lập về ngân sách vào ban đầu.",
   },
   {
     title: "Biệt thự đơn lập",
-    desc: "Phân khúc đẳng cấp với số lượng giới hạn, phù hợp nhóm khách hàng giữ tài sản lâu dài.",
+    desc: "Sản phẩm giới hạn, định vị đẳng cấp và thường được nhóm khách giữ tài sản dài hạn ưu tiên.",
   },
   {
     title: "Căn hộ",
-    desc: "Mức vốn vào dễ tiếp cận hơn, thanh khoản tốt nhờ nhu cầu ở thật và thuê ở khu đô thị quy mô lớn.",
+    desc: "Vốn vào thấp hơn thấp tầng, phù hợp chiến lược cho thuê, tích lũy tài sản và ở thật.",
   },
 ];
 
-const amenities = [
-  "Trường liên cấp Vinschool",
-  "Bệnh viện Vinmec",
-  "Vincom Mega Mall",
-  "Công viên trung tâm & hồ cảnh quan",
-  "Tổ hợp thể thao & giải trí",
-  "Khu vui chơi trẻ em",
+const faqs = [
+  {
+    q: "Giá bán chính thức đã công bố chưa?",
+    a: "Hiện thị trường vẫn đang cập nhật theo từng giai đoạn. Bảng trong trang là mức tham khảo tổng hợp, chưa thay thế thông báo chính thức.",
+  },
+  {
+    q: "Nên vào giai đoạn nào để tối ưu biên an toàn?",
+    a: "Thực tế nhiều nhà đầu tư ưu tiên giai đoạn đầu để có chính sách tốt hơn. Tuy nhiên vẫn cần so sánh pháp lý, tiến độ và dòng tiền cá nhân.",
+  },
+  {
+    q: "Dự án phù hợp mua ở hay mua đầu tư?",
+    a: "Có thể phù hợp cả hai tùy loại hình. Căn hộ/nhà phố thường linh hoạt hơn, còn biệt thự thiên về tài sản dài hạn.",
+  },
+  {
+    q: "Form đăng ký sẽ nhận gì?",
+    a: "Khách sẽ nhận bản cập nhật bảng giá, chính sách và tài liệu phân tích tổng hợp theo tệp nhu cầu đã chọn.",
+  },
+  {
+    q: "Khi nào có thể nhận giỏ hàng chi tiết?",
+    a: "Ngay khi có cập nhật mới từ đội ngũ tư vấn thị trường, hệ thống sẽ gửi theo thông tin khách đã đăng ký.",
+  },
+  {
+    q: "Thông tin cá nhân có được bảo mật không?",
+    a: "Có. Dữ liệu lead chỉ dùng cho mục đích tư vấn dự án và không chia sẻ ra bên ngoài.",
+  },
 ];
 
 export default function Home() {
@@ -93,19 +144,16 @@ export default function Home() {
     setIsSubmitting(true);
 
     // TODO: gắn Google Sheet webhook khi anh Dương cung cấp
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 900));
 
     setIsSubmitting(false);
     setIsSuccess(true);
+
     setTimeout(() => {
       setIsSuccess(false);
       setIsFormOpen(false);
-      setFormState({
-        fullName: "",
-        phone: "",
-        demand: "Mua đầu tư dài hạn",
-      });
-    }, 2500);
+      setFormState({ fullName: "", phone: "", demand: "Mua đầu tư dài hạn" });
+    }, 2200);
   };
 
   return (
@@ -120,10 +168,9 @@ export default function Home() {
               height={38}
               className="h-8 w-auto"
             />
-            <span className="hidden text-xs text-surface-warm md:block">
-              Cập nhật: {today}
-            </span>
+            <span className="hidden text-xs text-surface-warm md:block">Cập nhật: {today}</span>
           </div>
+
           <button
             onClick={() => setIsFormOpen(true)}
             className="rounded-lg bg-primary-accent px-4 py-2 text-sm font-bold hover:bg-primary-accent-hover"
@@ -141,21 +188,21 @@ export default function Home() {
           priority
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-primary-bg/75 to-primary-bg" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-primary-bg/75 to-primary-bg" />
 
         <div className="relative mx-auto flex max-w-6xl flex-col gap-5 px-4 py-14 md:py-24">
-          <div className="inline-flex w-fit items-center gap-2 rounded-full border border-primary-accent/50 bg-primary-accent/25 px-3 py-1 text-xs font-semibold text-surface-warm">
-            <Sparkles size={14} /> Quỹ hàng ưu tiên mở bán đợt đầu
+          <div className="inline-flex w-fit items-center gap-2 rounded-full border border-primary-accent/50 bg-primary-accent/20 px-3 py-1 text-xs font-semibold text-surface-warm">
+            <Sparkles size={14} /> Giỏ hàng nội bộ & chính sách giai đoạn đầu
           </div>
 
           <h1 className="max-w-4xl text-3xl font-extrabold leading-tight md:text-5xl">
-            GIỎ HÀNG NỘI BỘ VINHOMES SAIGON PARK HÓC MÔN
-            <span className="block text-surface-warm">Nhận bảng giá & chính sách mới nhất trong 2 phút</span>
+            BẢNG GIÁ DỰ KIẾN VINHOMES SAIGON PARK HÓC MÔN
+            <span className="block text-surface-warm">Nhận file phân tích đầu tư 2026–2030 trong 2 phút</span>
           </h1>
 
           <p className="max-w-3xl text-sm text-surface-light/90 md:text-lg">
-            Tổng hợp nhanh: vị trí, quy hoạch 924ha, loại hình sản phẩm, phân tích đầu tư 2026–2030 và
-            chính sách bán hàng giai đoạn 1.
+            Tổng hợp nhanh: thông số dự án, khung giá theo loại hình, phân tích vị trí – hạ tầng – tiềm năng,
+            và checklist chọn sản phẩm phù hợp mục tiêu ở / đầu tư.
           </p>
 
           <div className="flex flex-col gap-3 sm:flex-row">
@@ -178,10 +225,10 @@ export default function Home() {
               <ShieldCheck size={14} className="text-surface-warm" /> Bảo mật thông tin đăng ký
             </div>
             <div className="inline-flex items-center gap-1.5">
-              <CheckCircle2 size={14} className="text-surface-warm" /> Chuyên viên phản hồi nhanh
+              <CheckCircle2 size={14} className="text-surface-warm" /> Cập nhật liên tục theo thị trường
             </div>
             <div className="inline-flex items-center gap-1.5">
-              <Clock3 size={14} className="text-surface-warm" /> Cập nhật liên tục theo thị trường
+              <Landmark size={14} className="text-surface-warm" /> Bám dữ liệu từ nguồn tham chiếu
             </div>
           </div>
         </div>
@@ -189,17 +236,35 @@ export default function Home() {
 
       <section className="bg-surface-light px-4 py-12 text-primary-bg">
         <div className="mx-auto max-w-6xl">
-          <h2 className="text-center text-2xl font-bold md:text-3xl">Thông tin nhanh dự án</h2>
+          <h2 className="text-center text-2xl font-bold md:text-3xl">Thông tin pháp lý & tổng quan dự án</h2>
           <div className="mx-auto mt-2 h-1 w-16 bg-primary-accent" />
 
+          <div className="mt-8 grid gap-3 md:grid-cols-2">
+            {overview.map((item) => (
+              <div key={item.label} className="rounded-lg border border-surface-warm/80 bg-white p-4">
+                <p className="text-xs font-semibold uppercase tracking-wide text-primary-accent">{item.label}</p>
+                <p className="mt-1 text-sm leading-relaxed text-primary-bg/90">{item.value}</p>
+              </div>
+            ))}
+          </div>
+
+          <p className="mt-4 text-xs text-primary-bg/65">
+            Lưu ý: Một số thông tin đang ở mức tham khảo thị trường và có thể điều chỉnh theo công bố chính thức từng thời điểm.
+          </p>
+        </div>
+      </section>
+
+      <section className="bg-primary-bg px-4 py-12">
+        <div className="mx-auto max-w-6xl">
+          <h2 className="text-center text-2xl font-bold md:text-3xl">Thông số nhanh</h2>
           <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4">
-            {stats.map((item) => {
+            {quickStats.map((item) => {
               const Icon = item.icon;
               return (
-                <article key={item.label} className="rounded-xl border border-surface-warm/60 bg-white p-4 text-center">
-                  <Icon className="mx-auto mb-2 text-primary-accent" size={26} />
+                <article key={item.label} className="rounded-xl border border-support-teal/40 bg-support-teal/10 p-4 text-center">
+                  <Icon className="mx-auto mb-2 text-surface-warm" size={26} />
                   <p className="text-lg font-bold">{item.value}</p>
-                  <p className="text-sm text-primary-bg/70">{item.label}</p>
+                  <p className="text-sm text-surface-light/75">{item.label}</p>
                 </article>
               );
             })}
@@ -207,44 +272,53 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-6xl gap-8 px-4 py-14 md:grid-cols-2">
-        <div>
-          <h3 className="text-2xl font-bold md:text-3xl">Vị trí Vinhomes Saigon Park ở đâu?</h3>
-          <p className="mt-4 text-surface-light/85">
-            Dự án nằm tại xã Xuân Thới Sơn, Hóc Môn – cửa ngõ Tây Bắc TP.HCM, kết nối thuận tiện về
-            trung tâm và các tỉnh Tây Ninh, Long An nhờ các trục giao thông chiến lược.
+      <section className="px-4 py-14">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-6 flex items-end justify-between gap-4">
+            <div>
+              <h3 className="text-2xl font-bold md:text-3xl">Bảng giá dự kiến theo loại hình</h3>
+              <p className="mt-2 text-sm text-surface-light/80">Dùng để so sánh nhanh ngân sách trước khi chốt tư vấn 1-1.</p>
+            </div>
+            <button
+              onClick={() => setIsFormOpen(true)}
+              className="hidden rounded-lg bg-primary-accent px-4 py-2 text-sm font-bold hover:bg-primary-accent-hover md:block"
+            >
+              Nhận bảng giá chi tiết
+            </button>
+          </div>
+
+          <div className="overflow-hidden rounded-xl border border-support-teal/30">
+            <table className="w-full text-left text-sm">
+              <thead className="bg-support-teal/25 text-surface-warm">
+                <tr>
+                  <th className="px-4 py-3">Loại sản phẩm</th>
+                  <th className="px-4 py-3">Diện tích tham khảo</th>
+                  <th className="px-4 py-3">Giá dự kiến</th>
+                </tr>
+              </thead>
+              <tbody>
+                {pricingRows.map((row) => (
+                  <tr key={row[0]} className="border-t border-support-teal/25">
+                    <td className="px-4 py-3 font-medium">{row[0]}</td>
+                    <td className="px-4 py-3 text-surface-light/85">{row[1]}</td>
+                    <td className="px-4 py-3 text-surface-warm">{row[2]}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <p className="mt-3 text-xs text-surface-light/65">
+            *Giá trên là mức tham khảo tổng hợp từ nguồn thị trường, chưa thay thế thông báo giá chính thức từ chủ đầu tư/đơn vị phân phối.
           </p>
-
-          <ul className="mt-5 space-y-3 text-sm text-surface-light/90 md:text-base">
-            {[
-              "Kề cận Quốc lộ 22 – trục kết nối nội đô và liên vùng.",
-              "Hưởng lợi trực tiếp từ Metro số 2 và định hướng kéo dài tuyến.",
-              "Gắn với cao tốc TP.HCM – Mộc Bài và các tuyến vành đai lớn.",
-            ].map((line) => (
-              <li key={line} className="flex items-start gap-2">
-                <ChevronRight size={18} className="mt-0.5 text-surface-warm" />
-                <span>{line}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="overflow-hidden rounded-2xl border border-support-teal/40">
-          <Image
-            src="https://vinhomeshocmonsr.vn/wp-content/uploads/2025/11/phoi-canh-vinhomes-hoc-mon.jpg"
-            alt="Vị trí dự án Vinhomes Hóc Môn"
-            width={1200}
-            height={800}
-            className="h-full w-full object-cover"
-          />
         </div>
       </section>
 
       <section className="bg-surface-warm/10 px-4 py-14">
         <div className="mx-auto max-w-6xl">
-          <h3 className="text-center text-2xl font-bold md:text-3xl">3 lý do nên quan tâm giai đoạn đầu</h3>
-          <div className="mt-8 grid gap-4 md:grid-cols-3">
-            {reasons.map((reason) => (
+          <h3 className="text-center text-2xl font-bold md:text-3xl">4 luận điểm đầu tư đáng chú ý</h3>
+          <div className="mt-8 grid gap-4 md:grid-cols-2">
+            {investmentReasons.map((reason) => (
               <article key={reason.title} className="rounded-xl border border-support-teal/30 bg-primary-bg/50 p-5">
                 <h4 className="text-lg font-semibold text-surface-warm">{reason.title}</h4>
                 <p className="mt-2 text-sm text-surface-light/85">{reason.desc}</p>
@@ -254,28 +328,42 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="px-4 py-14">
-        <div className="mx-auto max-w-6xl">
-          <h3 className="text-center text-2xl font-bold md:text-3xl">Tiện ích nội khu nổi bật</h3>
-          <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {amenities.map((amenity) => (
-              <div key={amenity} className="rounded-lg border border-support-teal/30 bg-primary-bg/60 px-4 py-3 text-sm">
-                <span className="inline-flex items-center gap-2">
-                  <CheckCircle2 size={16} className="text-surface-warm" /> {amenity}
-                </span>
-              </div>
+      <section className="mx-auto grid max-w-6xl gap-8 px-4 py-14 md:grid-cols-2">
+        <div>
+          <h3 className="text-2xl font-bold md:text-3xl">3 lý do phù hợp mua ở dài hạn</h3>
+          <ul className="mt-5 space-y-4 text-sm text-surface-light/90 md:text-base">
+            {livingReasons.map((line) => (
+              <li key={line} className="flex items-start gap-2">
+                <ChevronRight size={18} className="mt-0.5 text-surface-warm" />
+                <span>{line}</span>
+              </li>
             ))}
-          </div>
+          </ul>
+
+          <button
+            onClick={() => setIsFormOpen(true)}
+            className="mt-6 inline-flex items-center gap-2 rounded-lg bg-primary-accent px-5 py-3 text-sm font-bold hover:bg-primary-accent-hover"
+          >
+            Nhận tư vấn theo nhu cầu ở thật <ChevronRight size={16} />
+          </button>
+        </div>
+
+        <div className="overflow-hidden rounded-2xl border border-support-teal/40">
+          <Image
+            src="https://vinhomeshocmonsr.vn/wp-content/uploads/2025/11/phoi-canh-vinhomes-hoc-mon.jpg"
+            alt="Khu đô thị Vinhomes Saigon Park"
+            width={1200}
+            height={800}
+            className="h-full w-full object-cover"
+          />
         </div>
       </section>
 
       <section className="bg-surface-light px-4 py-14 text-primary-bg">
         <div className="mx-auto max-w-6xl">
-          <h3 className="text-center text-2xl font-bold md:text-3xl">Loại hình sản phẩm</h3>
-          <p className="mt-2 text-center text-sm text-primary-bg/70">Thông tin chi tiết và giỏ hàng đẹp sẽ gửi khi đăng ký.</p>
-
+          <h3 className="text-center text-2xl font-bold md:text-3xl">Loại hình sản phẩm phù hợp từng mục tiêu</h3>
           <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {productTypes.map((item) => (
+            {productCards.map((item) => (
               <article key={item.title} className="rounded-xl border border-surface-warm/70 bg-white p-5">
                 <h4 className="text-lg font-bold">{item.title}</h4>
                 <p className="mt-2 text-sm text-primary-bg/70">{item.desc}</p>
@@ -283,7 +371,7 @@ export default function Home() {
                   onClick={() => setIsFormOpen(true)}
                   className="mt-4 inline-flex items-center gap-1 text-sm font-bold text-primary-accent hover:gap-2"
                 >
-                  Nhận thông tin chi tiết <ChevronRight size={16} />
+                  Nhận giỏ hàng tham khảo <ChevronRight size={16} />
                 </button>
               </article>
             ))}
@@ -291,11 +379,25 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="px-4 py-16">
+      <section className="px-4 py-14">
+        <div className="mx-auto max-w-6xl">
+          <h3 className="text-center text-2xl font-bold md:text-3xl">FAQ – câu hỏi thường gặp</h3>
+          <div className="mt-8 space-y-3">
+            {faqs.map((faq) => (
+              <article key={faq.q} className="rounded-lg border border-support-teal/30 bg-support-teal/10 p-4">
+                <h4 className="font-semibold text-surface-warm">{faq.q}</h4>
+                <p className="mt-1 text-sm text-surface-light/85">{faq.a}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="px-4 pb-16">
         <div className="mx-auto max-w-4xl rounded-2xl border border-support-teal/30 bg-support-teal/15 p-8 text-center">
-          <h3 className="text-2xl font-bold">Nhận file phân tích đầu tư 2026–2030 & bảng giá đợt đầu</h3>
+          <h3 className="text-2xl font-bold">Nhận bảng giá + file phân tích + chính sách mới nhất</h3>
           <p className="mx-auto mt-3 max-w-2xl text-surface-light/85">
-            Điền thông tin để nhận tài liệu mới nhất về dự án, quỹ căn đẹp và chính sách bán hàng ưu tiên.
+            Đăng ký trong 30 giây để nhận tài liệu đầy đủ theo mục tiêu ở thực hoặc đầu tư của anh/chị.
           </p>
           <button
             onClick={() => setIsFormOpen(true)}
@@ -307,16 +409,10 @@ export default function Home() {
       </section>
 
       <div className="fixed bottom-0 left-0 z-50 flex w-full gap-3 border-t border-surface-warm/20 bg-primary-bg p-3 md:hidden">
-        <a
-          href="tel:0975442140"
-          className="flex-1 rounded-lg bg-support-teal px-3 py-3 text-center text-sm font-bold"
-        >
+        <a href="tel:0975442140" className="flex-1 rounded-lg bg-support-teal px-3 py-3 text-center text-sm font-bold">
           Gọi ngay
         </a>
-        <button
-          onClick={() => setIsFormOpen(true)}
-          className="flex-1 rounded-lg bg-primary-accent px-3 py-3 text-sm font-bold"
-        >
+        <button onClick={() => setIsFormOpen(true)} className="flex-1 rounded-lg bg-primary-accent px-3 py-3 text-sm font-bold">
           Nhận bảng giá
         </button>
       </div>
